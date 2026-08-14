@@ -39,6 +39,10 @@ function generatePortSVG(text) {
         )
 }
 
+function netboxColorMode() {
+    return document.documentElement.dataset.bsTheme
+}
+
 const options = {
     interaction: {
         hover: true,
@@ -53,7 +57,7 @@ const options = {
             multi: 'md',
             face: 'helvetica',
             color:
-                document.documentElement.dataset.netboxColorMode === 'dark'
+                netboxColorMode() === 'dark'
                     ? '#fff'
                     : '#000'
         }
@@ -605,13 +609,18 @@ const observer = new MutationObserver((mutations) =>
             !(mutation.target instanceof HTMLElement)
         )
             return
-        const netboxColorMode = mutation.target.dataset.bsTheme
-        options.nodes.font.color = netboxColorMode === 'dark' ? '#fff' : '#000'
+        options.nodes.font.color = netboxColorMode() === 'dark' ? '#fff' : '#000'
         graph.setOptions(options)
     })
 )
 
-observer.observe(document.body, {
+observer.observe(document.documentElement, {
     attributes: true,
     attributeFilter: ['data-bs-theme']
+})
+
+window.addEventListener('netbox.colorModeChanged', (event) => {
+    if (!graph) return
+    options.nodes.font.color = event.detail?.netboxColorMode === 'dark' ? '#fff' : '#000'
+    graph.setOptions(options)
 })

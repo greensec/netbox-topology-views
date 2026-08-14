@@ -29,9 +29,8 @@ else:
 
 
 def image_static_url(path: Path) -> str:
-    return static(
-        f"/{path.relative_to(Path(settings.STATIC_ROOT))}"
-    )
+    rel = path.relative_to(Path(settings.STATIC_ROOT)).as_posix()
+    return static(rel)
 
 
 def get_image_from_url(url: str) -> str:

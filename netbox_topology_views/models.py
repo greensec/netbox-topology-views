@@ -71,7 +71,7 @@ class RoleImage(ChangeLoggingMixin, ExportTemplatesMixin, EventRulesMixin):
         returns the model's image's absolute path in the filesystem
         raises ValueError if the file cannot be found
         """
-        path = Path(settings.STATIC_ROOT) / self.image
+        path = Path(settings.STATIC_ROOT) / self.image.lstrip('/')
 
         if not path.exists():
             raise ValueError(f"{self.role} path '{path}' does not exists")
@@ -97,7 +97,7 @@ class RoleImage(ChangeLoggingMixin, ExportTemplatesMixin, EventRulesMixin):
             self.get_image()
         except ValueError:
             return self.get_default_image(dir)
-        return static(f"/{self.image}")
+        return image_static_url(Path(settings.STATIC_ROOT) / self.image.lstrip('/'))
 
 class CoordinateGroup(NetBoxModel):
     """
