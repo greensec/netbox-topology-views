@@ -4,7 +4,7 @@ from urllib.parse import urljoin
 import pytest
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def base_url(netbox_server):
     return netbox_server
 
